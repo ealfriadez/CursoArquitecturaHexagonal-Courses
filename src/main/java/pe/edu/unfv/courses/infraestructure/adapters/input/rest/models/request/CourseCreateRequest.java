@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CourseCreateRequest {
-
-	@NotBlank(message = "Field name cannnot be null or empty")
+	
+	@NotBlank
 	private String name;
 }
