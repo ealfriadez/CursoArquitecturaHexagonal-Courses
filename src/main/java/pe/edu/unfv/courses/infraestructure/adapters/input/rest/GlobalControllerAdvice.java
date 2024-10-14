@@ -6,17 +6,21 @@ import static pe.edu.unfv.courses.infraestructure.utils.CourseErrorCatalog.COURS
 import static pe.edu.unfv.courses.infraestructure.utils.CourseErrorCatalog.COURSE_NOT_FOUND;
 import static pe.edu.unfv.courses.infraestructure.utils.CourseErrorCatalog.INTERNAL_SERVER_ERROR;
 import static pe.edu.unfv.courses.infraestructure.utils.CourseErrorCatalog.STUDENT_NOT_FOUND;
+import static pe.edu.unfv.courses.infraestructure.utils.CourseErrorCatalog.WEB_CLIENT_ERROR;
 
 import java.time.LocalDate;
+import java.util.Collections;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import pe.edu.unfv.courses.domain.exceptions.CourseNotFoundException;
 import pe.edu.unfv.courses.domain.exceptions.StudentNotFoundException;
@@ -75,6 +79,23 @@ public class GlobalControllerAdvice {
 				.build();
 	}
 	
+	@ExceptionHandler(FeignException.class)
+	public ResponseEntity<ErrorResponse> handleFeignException(FeignException e){
+		
+		log.error(ERROR_LOG_MESSAGE, WEB_CLIENT_ERROR.getCode(), FUNCTIONAL, WEB_CLIENT_ERROR.getMessage());
+		
+		ErrorResponse errorResponse = ErrorResponse.builder()
+				.code(WEB_CLIENT_ERROR.getCode())
+				.errorType(FUNCTIONAL)
+				.genericMessage(WEB_CLIENT_ERROR.getMessage())
+				.details(Collections.singletonList(e.getMessage()))
+				.timestamp(LocalDate.now().toString())
+				.build();
+		
+		return ResponseEntity.status(e.status())
+				.body(errorResponse);
+	}
+	
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(Exception.class)
 	public ErrorResponse handleWebClientErrorException(Exception e) {
@@ -85,6 +106,7 @@ public class GlobalControllerAdvice {
 				.code(INTERNAL_SERVER_ERROR.getCode())
 				.errorType(SYSTEM)
 				.genericMessage(INTERNAL_SERVER_ERROR.getMessage())
+				.details(Collections.singletonList(e.getMessage()))
 				.timestamp(LocalDate.now().toString())
 				.build();
 	}

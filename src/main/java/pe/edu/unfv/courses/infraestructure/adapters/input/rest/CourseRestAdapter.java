@@ -71,8 +71,8 @@ public class CourseRestAdapter {
 		return studentsInputPort.removeStudentFromCourse(courseId, studentId);
 	}
 	
-	@DeleteMapping("/course/{courseId}/student/{studentId}")
-	public Student removeStudentFromCollection(@PathVariable Long courseId, @PathVariable Long studentId) {
-		return studentsInputPort.removeStudentFromCollection(studentId);
+	@DeleteMapping("/remove-student-from-collection/{studentId}")
+	public void removeStudentFromCollection(@PathVariable Long studentId) {
+		studentsInputPort.removeStudentFromCollection(studentId);
 	}
 }
