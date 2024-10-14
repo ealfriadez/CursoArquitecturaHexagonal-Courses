@@ -1,7 +1,6 @@
 package pe.edu.unfv.courses.application.services;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -56,20 +55,17 @@ public class CourseService implements CourseInputPort, StudentsInputPort{
 	}
 	
 	@Override
-	public Optional<Student> addStudentToCourse(Long courseId, Long studentId) {
-		// TODO Auto-generated method stub
-		return Optional.empty();
+	public Student addStudentToCourse(Long courseId, Long studentId) {		
+		return studentOuputPort.addStudentToCourse(courseId, studentId);
 	}
 
 	@Override
-	public Optional<Student> removeStudentFromCourse(Long courseId, Long studentId) {
-		// TODO Auto-generated method stub
-		return Optional.empty();
+	public Student removeStudentFromCourse(Long courseId, Long studentId) {		
+		return studentOuputPort.removeStudentFromCourse(courseId, studentId);
 	}
 
 	@Override
 	public void removeStudentFromCollection(Long stundentId) {
-		// TODO Auto-generated method stub
-		
+		studentOuputPort.removeStudentFromCollection(stundentId);		
 	}
 }

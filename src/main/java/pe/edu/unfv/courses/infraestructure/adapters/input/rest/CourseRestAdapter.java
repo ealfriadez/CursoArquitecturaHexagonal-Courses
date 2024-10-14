@@ -20,9 +20,9 @@ import lombok.RequiredArgsConstructor;
 import pe.edu.unfv.courses.application.ports.input.CourseInputPort;
 import pe.edu.unfv.courses.application.ports.input.StudentsInputPort;
 import pe.edu.unfv.courses.domain.models.Course;
+import pe.edu.unfv.courses.domain.models.Student;
 import pe.edu.unfv.courses.infraestructure.adapters.input.rest.mapper.CourseRestMapper;
 import pe.edu.unfv.courses.infraestructure.adapters.input.rest.models.request.CourseCreateRequest;
-import pe.edu.unfv.courses.infraestructure.adapters.input.rest.models.response.CourseResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,31 +34,45 @@ public class CourseRestAdapter {
 	private final CourseRestMapper courseRestMapper;
 	
 	@GetMapping
-	public List<CourseResponse> findAll(){
-		return courseRestMapper.toCourseResponses(courseInputPort.findAll());		
+	public List<Course> findAll(){
+		return courseInputPort.findAll();		
 	}
 	
 	@GetMapping("/{id}")
-	public CourseResponse findById(@PathVariable Long id) {
-		return courseRestMapper.toCourseResponse(courseInputPort.findById(id));
+	public Course findById(@PathVariable Long id) {
+		return courseInputPort.findById(id);
 	}
 	
 	@PostMapping
-	public ResponseEntity<CourseResponse> save(@Valid @RequestBody CourseCreateRequest request){
+	public ResponseEntity<Course> save(@Valid @RequestBody CourseCreateRequest request){
 		Course course = courseInputPort.save(courseRestMapper.toCourse(request));
 		return ResponseEntity.created(URI.create("/courses".concat(course.getId().toString())))
-				.body(courseRestMapper.toCourseResponse(course));
+				.body(course);
 	}
 	
 	@PutMapping("/{id}")
-	public CourseResponse update(@PathVariable Long id, @Valid @RequestBody CourseCreateRequest request) {
-		return courseRestMapper.toCourseResponse(courseInputPort.update(id, courseRestMapper.toCourse(request)));
+	public Course update(@PathVariable Long id, @Valid @RequestBody CourseCreateRequest request) {
+		return courseInputPort.update(id, courseRestMapper.toCourse(request));
 	}
 	
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteById(@PathVariable Long id) {
 		courseInputPort.deleteById(id);
+	}	
+	
+	@PutMapping("/course/{courseId}/student/{studentId}")
+	public Student addStudentToCourse(@PathVariable Long courseId, @PathVariable Long studentId) {
+		return studentsInputPort.addStudentToCourse(courseId, studentId);
 	}
 	
+	@DeleteMapping("/course/{courseId}/student/{studentId}")
+	public Student removeStudentFromCourse(@PathVariable Long courseId, @PathVariable Long studentId) {
+		return studentsInputPort.removeStudentFromCourse(courseId, studentId);
+	}
+	
+	@DeleteMapping("/course/{courseId}/student/{studentId}")
+	public Student removeStudentFromCollection(@PathVariable Long courseId, @PathVariable Long studentId) {
+		return studentsInputPort.removeStudentFromCollection(studentId);
+	}
 }
