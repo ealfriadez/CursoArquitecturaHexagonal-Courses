@@ -1,5 +1,19 @@
 server:
-  port: 8087
+  port: 8097
 spring:
   application:
-    name: CursoArquitecturaHexagonalCourses  
+    name: courses-service  
+  jackson:
+    default-property-inclusion: NON_NULL
+  datasource:
+    url: jdbc:mysql://localhos:3386/courses_db
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect

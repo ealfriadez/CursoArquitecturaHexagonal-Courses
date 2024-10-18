@@ -3,8 +3,9 @@ package pe.edu.unfv.courses.infraestructure.adapters.output.restclient;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import pe.edu.unfv.courses.application.ports.output.StudentOuputPort;
+import pe.edu.unfv.courses.application.ports.output.ExternalStudentOuputPort;
 import pe.edu.unfv.courses.domain.exceptions.CourseNotFoundException;
+import pe.edu.unfv.courses.domain.exceptions.NonEnrolledStudentException;
 import pe.edu.unfv.courses.domain.models.Student;
 import pe.edu.unfv.courses.infraestructure.adapters.output.persistence.models.CourseStudent;
 import pe.edu.unfv.courses.infraestructure.adapters.output.persistence.repository.CourseJpaRepository;
@@ -12,7 +13,7 @@ import pe.edu.unfv.courses.infraestructure.adapters.output.restclient.client.Stu
 
 @Component
 @RequiredArgsConstructor
-public class StudentRestClientAdapter implements StudentOuputPort{
+public class StudentRestClientAdapter implements ExternalStudentOuputPort{
 
 	private final StudentFeignClient feignClient;
 	private final CourseJpaRepository courseJpaRepository;
@@ -30,6 +31,7 @@ public class StudentRestClientAdapter implements StudentOuputPort{
 				}).orElseThrow(CourseNotFoundException::new);
 	}
 
+	/*
 	@Override
 	public Student removeStudentFromCourse(Long courseId, Long studentId) {		
 		return courseJpaRepository.findById(courseId)
@@ -41,28 +43,26 @@ public class StudentRestClientAdapter implements StudentOuputPort{
 					courseJpaRepository.save(courseEntity);
 					return student;
 				}).orElseThrow(CourseNotFoundException::new);
-		
-		/*
+	}
+	*/
+	
+	@Override
+	public Student removeStudentFromCourse(Long courseId, Long studentId) {		
 		return courseJpaRepository.findById(courseId)
 				.map(courseEntity -> {
 					Student student = feignClient.findById(studentId);
-					List<Long> studentIds = courseEntity.getCourseStudentList()
-							.stream()
-							.map(CourseStudent::getStudentId)
-							.toList();					
-					boolean estaMatriculado = studentIds.stream()
-							.anyMatch(id -> id.equals(student.getId()));
-					
-					if (estaMatriculado) {
+					boolean isEnrolled = courseEntity.getCourseStudentList()
+						.stream()
+						.anyMatch(cs -> cs.getId().equals(student.getId()));
+					if (isEnrolled) {
 						CourseStudent courseStudent = new CourseStudent();
 						courseStudent.setStudentId(student.getId());
 						courseEntity.removeCourseStudent(courseStudent);
 						courseJpaRepository.save(courseEntity);
+						return student;
 					}
-					
-					throw new RuntimeException("");
-				})
-		*/
+					throw new NonEnrolledStudentException(student.getId());
+				}).orElseThrow(CourseNotFoundException::new);
 	}
 
 	@Override

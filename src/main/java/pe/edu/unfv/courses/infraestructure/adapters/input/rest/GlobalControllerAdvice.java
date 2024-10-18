@@ -5,6 +5,7 @@ import static pe.edu.unfv.courses.infraestructure.adapters.input.rest.models.enu
 import static pe.edu.unfv.courses.infraestructure.utils.CourseErrorCatalog.COURSE_BAD_PARAMETERS;
 import static pe.edu.unfv.courses.infraestructure.utils.CourseErrorCatalog.COURSE_NOT_FOUND;
 import static pe.edu.unfv.courses.infraestructure.utils.CourseErrorCatalog.INTERNAL_SERVER_ERROR;
+import static pe.edu.unfv.courses.infraestructure.utils.CourseErrorCatalog.NON_ENROLLED_STUDENT;
 import static pe.edu.unfv.courses.infraestructure.utils.CourseErrorCatalog.STUDENT_NOT_FOUND;
 import static pe.edu.unfv.courses.infraestructure.utils.CourseErrorCatalog.WEB_CLIENT_ERROR;
 
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import pe.edu.unfv.courses.domain.exceptions.CourseNotFoundException;
+import pe.edu.unfv.courses.domain.exceptions.NonEnrolledStudentException;
 import pe.edu.unfv.courses.domain.exceptions.StudentNotFoundException;
 import pe.edu.unfv.courses.infraestructure.adapters.input.rest.models.response.ErrorResponse;
 
@@ -61,6 +63,21 @@ public class GlobalControllerAdvice {
 	}
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(NonEnrolledStudentException.class)
+	public ErrorResponse handleNonEnrolledStudentException(NonEnrolledStudentException e){
+		
+		log.error(ERROR_LOG_MESSAGE, NON_ENROLLED_STUDENT.getCode(), FUNCTIONAL, NON_ENROLLED_STUDENT.getMessage());
+		
+		return ErrorResponse.builder()
+				.code(NON_ENROLLED_STUDENT.getCode())
+				.errorType(FUNCTIONAL)
+				.genericMessage(NON_ENROLLED_STUDENT.getMessage())
+				.details(Collections.singletonList(e.getMessage()))
+				.timestamp(LocalDate.now().toString())
+				.build();
+	}
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
 		
@@ -77,7 +94,7 @@ public class GlobalControllerAdvice {
 						.toList())
 				.timestamp(LocalDate.now().toString())
 				.build();
-	}
+	}	
 	
 	@ExceptionHandler(FeignException.class)
 	public ResponseEntity<ErrorResponse> handleFeignException(FeignException e){
@@ -109,5 +126,5 @@ public class GlobalControllerAdvice {
 				.details(Collections.singletonList(e.getMessage()))
 				.timestamp(LocalDate.now().toString())
 				.build();
-	}
+	}	
 }

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import pe.edu.unfv.courses.application.ports.input.CourseInputPort;
-import pe.edu.unfv.courses.application.ports.input.StudentsInputPort;
+import pe.edu.unfv.courses.application.ports.input.ExternalStudentsInputPort;
 import pe.edu.unfv.courses.domain.models.Course;
 import pe.edu.unfv.courses.domain.models.Student;
 import pe.edu.unfv.courses.infraestructure.adapters.input.rest.mapper.CourseRestMapper;
@@ -30,7 +30,7 @@ import pe.edu.unfv.courses.infraestructure.adapters.input.rest.models.request.Co
 public class CourseRestAdapter {
 
 	private final CourseInputPort courseInputPort;
-	private final StudentsInputPort studentsInputPort;
+	private final ExternalStudentsInputPort studentsInputPort;
 	private final CourseRestMapper courseRestMapper;
 	
 	@GetMapping
@@ -61,12 +61,12 @@ public class CourseRestAdapter {
 		courseInputPort.deleteById(id);
 	}	
 	
-	@PutMapping("/course/{courseId}/student/{studentId}")
+	@PutMapping("/{courseId}/student/{studentId}")
 	public Student addStudentToCourse(@PathVariable Long courseId, @PathVariable Long studentId) {
 		return studentsInputPort.addStudentToCourse(courseId, studentId);
 	}
 	
-	@DeleteMapping("/course/{courseId}/student/{studentId}")
+	@DeleteMapping("/{courseId}/student/{studentId}")
 	public Student removeStudentFromCourse(@PathVariable Long courseId, @PathVariable Long studentId) {
 		return studentsInputPort.removeStudentFromCourse(courseId, studentId);
 	}
