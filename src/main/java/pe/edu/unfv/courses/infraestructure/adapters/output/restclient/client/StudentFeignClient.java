@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import pe.edu.unfv.courses.domain.models.Student;
 
-@FeignClient(name = "students-service", url = "http://localhost:8080")
+@FeignClient(name = "students-service", url = "http://localhost:8087")
 public interface StudentFeignClient {
 
 	@GetMapping("/students/{id}")

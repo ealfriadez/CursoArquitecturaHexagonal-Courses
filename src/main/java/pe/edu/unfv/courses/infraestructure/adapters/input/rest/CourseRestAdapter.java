@@ -46,7 +46,7 @@ public class CourseRestAdapter {
 	@PostMapping
 	public ResponseEntity<Course> save(@Valid @RequestBody CourseCreateRequest request){
 		Course course = courseInputPort.save(courseRestMapper.toCourse(request));
-		return ResponseEntity.created(URI.create("/courses".concat(course.getId().toString())))
+		return ResponseEntity.created(URI.create("/courses/".concat(course.getId().toString())))
 				.body(course);
 	}
 	
@@ -70,7 +70,7 @@ public class CourseRestAdapter {
 	public Student removeStudentFromCourse(@PathVariable Long courseId, @PathVariable Long studentId) {
 		return studentsInputPort.removeStudentFromCourse(courseId, studentId);
 	}
-	
+	                
 	@DeleteMapping("/remove-student-from-collection/{studentId}")
 	public void removeStudentFromCollection(@PathVariable Long studentId) {
 		studentsInputPort.removeStudentFromCollection(studentId);
