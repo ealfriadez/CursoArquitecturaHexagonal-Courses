@@ -8,7 +8,8 @@ import org.mapstruct.ReportingPolicy;
 import pe.edu.unfv.courses.domain.models.Course;
 import pe.edu.unfv.courses.infraestructure.adapters.output.persistence.models.CourseEntity;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring",
+	unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface CoursePersistenceMapper {
 	
 	Course toCourse(CourseEntity entity);	

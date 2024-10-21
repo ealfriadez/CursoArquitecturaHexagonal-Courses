@@ -20,8 +20,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-@Table(name = "courses")
 @AllArgsConstructor
+@Table(name = "courses")
 public class CourseEntity {
 
 	@Id

@@ -11,6 +11,6 @@ public interface CourseJpaRepository extends CrudRepository<CourseEntity, Long>{
 
 	@Modifying
 	@Transactional
-	@Query("DELETE FROM CourseStudent cs WHERE cs.studentId = ?1")
+	@Query("DELETE FROM CourseStudent cs WHERE cs.studentId = ?1")	
 	void deleteCourseStudentByStudentById(Long studentId);
 }

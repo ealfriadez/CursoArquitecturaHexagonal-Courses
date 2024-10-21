@@ -54,5 +54,4 @@ public class CoursePersistenceAdapter implements CoursePersistencePort{
 	public void deleteById(Long id) {
 		courseJpaRepository.deleteById(id);		
 	}
-
 }
