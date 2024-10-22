@@ -16,8 +16,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "courses_students")
 public class CourseStudent {
 
@@ -27,7 +27,8 @@ public class CourseStudent {
 	
 	@Column(name = "student_id")
 	private Long studentId;
-	
+
+	@Override
 	public boolean equals(Object object) {
 		if (this == object) {
 			return true;

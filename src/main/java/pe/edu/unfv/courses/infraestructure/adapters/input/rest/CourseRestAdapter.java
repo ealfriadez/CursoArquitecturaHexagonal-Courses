@@ -51,7 +51,9 @@ public class CourseRestAdapter {
 	}
 	
 	@PutMapping("/{id}")
-	public Course update(@PathVariable Long id, @Valid @RequestBody CourseCreateRequest request) {
+	public Course update(
+			@PathVariable Long id,
+			@Valid @RequestBody CourseCreateRequest request) {
 		return courseInputPort.update(id, courseRestMapper.toCourse(request));
 	}
 	
@@ -62,12 +64,16 @@ public class CourseRestAdapter {
 	}	
 	
 	@PutMapping("/{courseId}/student/{studentId}")
-	public Student addStudentToCourse(@PathVariable Long courseId, @PathVariable Long studentId) {
+	public Student addStudentToCourse(
+			@PathVariable Long courseId,
+			@PathVariable Long studentId) {
 		return studentsInputPort.addStudentToCourse(courseId, studentId);
 	}
 	
 	@DeleteMapping("/{courseId}/student/{studentId}")
-	public Student removeStudentFromCourse(@PathVariable Long courseId, @PathVariable Long studentId) {
+	public Student removeStudentFromCourse(
+			@PathVariable Long courseId,
+			@PathVariable Long studentId) {
 		return studentsInputPort.removeStudentFromCourse(courseId, studentId);
 	}
 	                

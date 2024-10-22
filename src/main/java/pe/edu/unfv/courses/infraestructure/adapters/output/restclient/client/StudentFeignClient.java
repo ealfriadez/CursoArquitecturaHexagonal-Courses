@@ -13,7 +13,7 @@ import pe.edu.unfv.courses.domain.models.Student;
 public interface StudentFeignClient {
 
 	@GetMapping("/students/{id}")
-	Student findById(@PathVariable Long Id);
+	Student findById(@PathVariable Long id);
 	
 	@GetMapping("/students/find-by-ids")
 	List<Student> findByIds(@RequestParam List<Long> ids);

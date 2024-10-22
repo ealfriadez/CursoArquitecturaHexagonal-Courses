@@ -22,7 +22,7 @@ public class StudentRestClientAdapter implements ExternalStudentOuputPort{
 	public Student addStudentToCourse(Long courseId, Long studentId) {		
 		return courseJpaRepository.findById(courseId)
 				.map(courseEntity -> {
-					Student student = feignClient.findById(studentId);
+					Student student = feignClient.findById(studentId);	// FeignException -> 404, 400, 500
 					CourseStudent courseStudent = new CourseStudent();
 					courseStudent.setStudentId(student.getId());
 					courseEntity.addCourseStudent(courseStudent);
@@ -53,7 +53,7 @@ public class StudentRestClientAdapter implements ExternalStudentOuputPort{
 					Student student = feignClient.findById(studentId);
 					boolean isEnrolled = courseEntity.getCourseStudentList()
 						.stream()
-						.anyMatch(cs -> cs.getId().equals(student.getId()));
+						.anyMatch(cs -> cs.getStudentId().equals(studentId));
 					if (isEnrolled) {
 						CourseStudent courseStudent = new CourseStudent();
 						courseStudent.setStudentId(student.getId());
@@ -61,12 +61,12 @@ public class StudentRestClientAdapter implements ExternalStudentOuputPort{
 						courseJpaRepository.save(courseEntity);
 						return student;
 					}
-					throw new NonEnrolledStudentException(student.getId());
+					throw new NonEnrolledStudentException(studentId);
 				}).orElseThrow(CourseNotFoundException::new);
 	}
 
 	@Override
-	public void removeStudentFromCollection(Long stundentId) {
-		courseJpaRepository.deleteCourseStudentByStudentById(stundentId);
+	public void removeStudentFromCollection(Long studentId) {
+		courseJpaRepository.deleteCourseStudentByStudentById(studentId);
 	}
 }

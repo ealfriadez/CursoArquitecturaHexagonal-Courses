@@ -6,5 +6,5 @@ public interface ExternalStudentsInputPort {
 
 	Student addStudentToCourse(Long courseId, Long studentId);
 	Student removeStudentFromCourse(Long courseId, Long studentId);
-	void removeStudentFromCollection(Long stundentId);
+	void removeStudentFromCollection(Long studentId);
 }

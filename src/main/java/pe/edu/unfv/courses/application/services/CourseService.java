@@ -65,7 +65,7 @@ public class CourseService implements CourseInputPort, ExternalStudentsInputPort
 	}
 
 	@Override
-	public void removeStudentFromCollection(Long stundentId) {
-		studentOuputPort.removeStudentFromCollection(stundentId);		
+	public void removeStudentFromCollection(Long studentId) {
+		studentOuputPort.removeStudentFromCollection(studentId);
 	}
 }
