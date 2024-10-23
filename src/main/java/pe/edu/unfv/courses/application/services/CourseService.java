@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import pe.edu.unfv.courses.application.ports.input.CourseInputPort;
 import pe.edu.unfv.courses.application.ports.input.ExternalStudentsInputPort;
 import pe.edu.unfv.courses.application.ports.output.CoursePersistencePort;
@@ -13,6 +14,7 @@ import pe.edu.unfv.courses.domain.exceptions.CourseNotFoundException;
 import pe.edu.unfv.courses.domain.models.Course;
 import pe.edu.unfv.courses.domain.models.Student;
 
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class CourseService implements CourseInputPort, ExternalStudentsInputPort{
